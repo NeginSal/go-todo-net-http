@@ -5,10 +5,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/NeginSal/go-todo-net-http/db"
 	"github.com/NeginSal/go-todo-net-http/handlers"
 )
 
 func main() {
+	db.InitDB()
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Welcome to the TODO API")
 	})
