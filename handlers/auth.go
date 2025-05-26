@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -39,6 +40,28 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "just POST request is allowed!", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var input User
+	err := json.NewDecoder(r.Body).Decode(&input)
+	if err != nil || input.Username == "" || input.Password == "" {
+		http.Error(w, "Invalid data", http.StatusBadRequest)
+		return
+	}
+
+	var storedPassword string
+	err = db.DB.QueryRow("SELECT password FROM users WHERE username = ?", input.Username).Scan(&storedPassword)
+	if err == sql.ErrNoRows {
+		http.Error(w, "User not found", http.StatusUnauthorized)
+		return
+	} else if err != nil {
+		http.Error(w, "Server error", http.StatusInternalServerError)
+		return
+	}
+
+	if storedPassword != input.Password {
+		http.Error(w, "Wrong password", http.StatusUnauthorized)
 		return
 	}
 	fmt.Fprintln(w, "login is successful")
