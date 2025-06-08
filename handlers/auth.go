@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/NeginSal/go-todo-net-http/db"
+	"github.com/NeginSal/go-todo-net-http/database"
 	"golang.org/x/crypto/bcrypt"
 )
 
