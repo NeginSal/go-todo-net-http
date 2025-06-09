@@ -12,7 +12,7 @@ import (
 
 func main() {
 	config.InitEnv()
-	db.ConnectDB()
+	database.ConnectDB()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Welcome to the TODO API")
