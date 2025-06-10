@@ -27,5 +27,19 @@ func ConnectDB() {
 		panic(err)
 	}
 
+	createTodoTable := `
+  CREATE TABLE IF NOT EXISTS todos (
+	  id INTEGER PRIMARY KEY AUTOINCREMENT,
+	  title TEXT NOT NULL,
+	  completed BOOLEAN NOT NULL DEFAULT 0,
+	  user_id INTEGER NOT NULL,
+	  FOREIGN KEY(user_id) REFERENCES users(id)
+  );`
+
+	_, err = DB.Exec(createTodoTable)
+	if err != nil {
+		panic(err)
+	}
+
 	fmt.Println("✅ Connected to SQLite and ensured user table exists")
 }
